@@ -99,7 +99,7 @@ class MSA_processing:
                 self.seq_name_to_sequence[msa_df.index[seq_idx]] = msa_df.sequence[seq_idx]
 
         self.focus_seq = self.seq_name_to_sequence[self.focus_seq_name]
-        self.focus_cols = [ix for ix, s in enumerate(self.focus_seq) if s == s.upper() and s!='-'] 
+        self.focus_cols = [ix for ix, s in enumerate(self.focus_seq) if s == s.upper() and s!='-' and s in self.alphabet] 
         self.focus_seq_trimmed = [self.focus_seq[ix] for ix in self.focus_cols]
         self.seq_len = len(self.focus_cols)
         self.alphabet_size = len(self.alphabet)
@@ -158,7 +158,7 @@ class MSA_processing:
                         return 1/denom
                     else:
                         return 0.0 #return 0 weight if sequence is fully empty
-                self.weights = np.array(list(map(compute_weight,list_seq)))
+                self.weights = np.array(list(map(compute_weight,tqdm.tqdm(list_seq))))
                 np.save(file=self.weights_location, arr=self.weights)
         else:
             # If not using weights, use an isotropic weight matrix

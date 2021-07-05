@@ -52,6 +52,8 @@ if __name__=='__main__':
     if args.computation_mode=="all_singles":
         data.save_all_singles(output_filename=args.all_singles_mutations_folder + os.sep + protein_name + "_all_singles.csv")
         args.mutations_location = args.all_singles_mutations_folder + os.sep + protein_name + "_all_singles.csv"
+    else:
+        args.mutations_location = args.mutations_location + os.sep + protein_name + ".csv"
     
     model_name = protein_name + "_" + args.model_name_suffix
     print("Model name: "+str(model_name))
@@ -69,6 +71,7 @@ if __name__=='__main__':
 
     try:
         checkpoint_name = str(args.VAE_checkpoint_location) + os.sep + model_name + "_final"
+        print("Checkpoint name: "+str(checkpoint_name))
         checkpoint = torch.load(checkpoint_name)
         model.load_state_dict(checkpoint['model_state_dict'])
         print("Initialized VAE with checkpoint '{}' ".format(checkpoint_name))
