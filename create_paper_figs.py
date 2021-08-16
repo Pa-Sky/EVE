@@ -5,7 +5,7 @@ import seaborn as sns
 import os,sys
 from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve
 
-version = 'Aug15_10b10p'
+version = 'Aug15_10b10p_v2'
 plots_paper_folder = "/home/pn73/EVE/results/plots_paper/Aug15"
 ouput_file_location_ROC_curves = "/home/pn73/EVE/results/ROC_PRC_curves"
 
@@ -294,6 +294,7 @@ if '2bc' in list_figures_to_create:
         plot_Accuracy_df[df] = plt.scatter(x=x, y=y_accuracy_full[df], c=plot_colors_full[df], edgecolors='none')
         plt.plot(x, y_accuracy_full[df], c=plot_colors_full[df])
     ax.vlines(x=75, ymin=85, ymax=99, colors='xkcd:red', linestyles='--')
+    ax.hlines(y=90.5, xmin=8, xmax=102, colors='xkcd:red', linestyles='--')
     ax.grid(True, color='lightgrey',alpha=0.4)
     #plt.xlabel("% of variants retained based on uncertainty")
     #plt.xlim(8, 102)
@@ -304,10 +305,17 @@ if '2bc' in list_figures_to_create:
     ax2.set_xlim(ax.get_xlim())
     ax2.set_xticks(x)
     ax2.set_xticklabels(factor)
-    ax2.set_xlabel("Classification volume increase Vs ClinVar")
+    ax2.set_xlabel("Potential variant classification increase Vs ClinVar")
     ax.set_ylabel("Accuracy (%)")
     ax.set_ylim(85, 99)
     ax.set_yticks(np.arange(86, 99, step=2))#, fontsize=10)
+    
+    #Add tick for 25%
+    x_ticks = np.append(ax.get_xticks(), 75)
+    ax.set_xticks(x_ticks)
+    ax.set_xticklabels(['','80','','60','','40','','','','0', '25'])
+    ax.get_xticklabels()[-1].set_color('xkcd:red')
+    
     #plt.legend([plot_Accuracy_df['data_main'],plot_Accuracy_df['data_3b3p_full'],plot_Accuracy_df['data_5b5p_full'],plot_Accuracy_df['data_10b10p_full']], ['All proteins', 'Proteins w/ at least 3B & 3P', 'Proteins w/ at least 5B & 5P', 'Proteins w/ at least 10B & 10P'], loc='lower left', prop={'size':8})
     fig.savefig(plots_paper_folder+os.sep+"Fig2c_Accuracy_Vs_uncertainty_full_"+version+".png", dpi=400, bbox_inches='tight')
     plt.clf()
